@@ -1,0 +1,138 @@
+
+	 
+		.animate
+{
+	transition: all 0.1s;
+	-webkit-transition: all 0.1s;
+}
+
+.action-button
+{
+	position: relative;
+	
+	border-radius: 10px;
+
+font-size: 25px;
+color: #FFF;
+text-decoration: none;
+margin-bottom: 160px;
+cursor: pointer;
+}
+
+.blue
+{
+	background-color: #3498DB;
+	border-bottom: 5px solid #2980B9;
+	text-shadow: 0px -2px #2980B9;
+}
+
+.querybutton{
+	
+	    display: block;
+    position: relative;
+    border-radius: 11px;
+  
+    font-size: 16px;
+    color: rgb(14, 12, 12);
+    text-decoration: none;
+  
+    cursor: pointer;
+    margin: -149px 125px 157px 31px;
+}
+	
+	
+}
+
+.action-button:active
+{
+	transform: translate(0px,5px);
+  -webkit-transform: translate(0px,5px);
+	border-bottom: 1px solid;
+}
+body {
+    font-family: Georgia, Times, serif;
+    border-top: solid 50px #004180; 
+	border-bottom: solid 50px #004180;
+}
+
+.input_text{
+	padding-left: 10px;
+	height: 36px;
+	width: 405px;
+	margin: 32px;
+	border-color: #005DA8;
+}
+.input_id 
+{    padding-left: 15px;
+    height: 30px;
+    width: 93px;
+    border-color: #005DA8;
+    margin: 26px;
+}
+
+	
+table {
+    border-collapse: collapse;
+	 z-index: 200;
+}
+#loading-img
+{
+   
+    background:transparent url('loading.gif') no-repeat 0 0;
+    font-size: 0px;
+    display: inline-block;
+	z-index:300;
+	 position: fixed; /* or absolute */
+    top: 18%;
+	left: 42%;
+	right: 50%;
+}
+
+td, th {
+    border: 1px solid black;
+}
+
+		th, td {
+    text-align: left;
+    height: 34px;
+    padding: 6px;
+	
+}
+        
+        p {    font-size: 23px;
+    padding-top: 100px;
+    color: #0F1110;
+    
+}
+
+.timelineHolder {
+ width: 600px; height: 100%;
+}
+.title
+{font-size: 48px;
+color: rgba(221, 63, 174, 0.9);
+	    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(images/loader-64x/Preloader_2.gif) center no-repeat #fff;
+}
+
+#overlay {
+    background-color: rgba(12, 0, 0, 0.2);
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
