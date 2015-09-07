@@ -36,43 +36,43 @@
             if (urlStatus == "") {
                 alert("Please put Url");
             } else {
-              $("#table").find("tr:gt(0)").remove();
-             	var d = document.getElementById("table").style;
+            
+								var d = document.getElementById("table").style;
+						  $("#table").find("tr:gt(0)").remove();
+				  //      (d.display == 'block') ? d.display = 'none': d.display = 'block';
+					
+							$.get(urlStatus, function(response) {
+									   d.display = 'block';
+									   $('#overlay').show();
+										$('#loading-img').show();
+						
+								 $.each(response.bugs, function(index, elem) {
 
-  //      (d.display == 'block') ? d.display = 'none': d.display = 'block';
-		
-            $.get(urlStatus, function(response) {
-			
-			     $('#overlay').show();
-                    $('#loading-img').show();
-	       $("#table").find("tr:gt(0)").remove();
-                 $.each(response.bugs, function(index, elem) {
+									jQuery.ajax({
+										url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
+										success: function(data) {
 
-                    jQuery.ajax({
-                        url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
-                        success: function(data) {
+											handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
+											
+										},
+										  complete: function() {
+												if (index === response.bugs.length - 1) {
+													$('#loading-img').hide();
+													$('#overlay').hide();
+											   
+												}  },
+										async: false
+																				 });
 
-                            handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
-							 d.display = 'block';
-                        },
-						  complete: function() {
-                                if (index === response.bugs.length - 1) {
-                                    $('#loading-img').hide();
-                                    $('#overlay').hide();
-                               
-                                }  },
-                        async: false
-																 });
-
-																			});
+																							});
 
 
-																		});
+																						});
 
-																	}
-																});
+																					}
+																				});
 
-															}
+																			}
 
 
 
@@ -316,7 +316,7 @@
 
 
 
-        $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 800px;height: 800px" > here you can find Details !</td></tr>');
+        $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 900px;height: 500px" > here you can find Details !</td></tr>');
 
         var table = drawtable(id, data, startDate);
 
@@ -612,7 +612,7 @@
     </table>
 	
   
-        <center> <label class="p" for="url">Put ID_Bug ! </label>
+        <center> <label class="p" for="url">ID_Bug </label>
         <input type="text" class=" input_id" value="Id" id="Id">
         <button type="button" class="action-button shadow animate blue" onclick="HistoryBugzilla()">History From Bugzilla</button>
         <button type="button" class="action-button shadow animate blue" onclick="gettimeline()">History with timeline</button>
