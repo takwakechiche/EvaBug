@@ -20,19 +20,30 @@
 
 
 <script>
+ function showme() {
+ 
+ 
+        	 $("#table").find("tr:gt(0)").remove();
+
+
+        doit();
+
+    }
+
+
     google.load('visualization', '1.0', {
         packages: ["timeline"]
     });
 
-    function showme() {
+    function doit() {
         var urlStatus = $('#voto').val();
-
+        var d = document.getElementById("table").style;
         $(document).ready(function() {
 
             if (urlStatus == "") {
                 alert("Please put Url");
             } else {
-                $("#table").find("tr:gt(0)").remove();
+              /*  $("#table").find("tr:gt(0)").remove();
                 var d = document.getElementById("table").style;
 
                 $.get(urlStatus, function(response) {
@@ -53,18 +64,42 @@
                                     d.display = 'block';
                                 }
                             },
-                            async: false
-                        });
+        				async: false*/
+						
+						
+												
+								
 
-                    });
+								    
+									  $.get(urlStatus, function(response) {
+							                $('#overlay').show();
+											$('#loading-img').show();
+										$.each(response.bugs, function(index, elem) {
+
+											jQuery.ajax({
+												url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
+												success: function(data) {
+
+													  handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
+												},      complete: function() {
+														if (index === response.bugs.length - 1) {
+															$('#loading-img').hide();
+															$('#overlay').hide();
+															     d.display = 'block';
+														}
+													},
+												async: false
+																 });
+
+																			});
 
 
-                });
+																		});
 
-            }
-        });
+																	}
+																});
 
-    }
+															}
 
 
 
@@ -585,42 +620,32 @@
 
 
 
-    </center>
+    
+	     <center> 
+	      <table border="1" id="table" style="display: none;">
+        <!-- All <tr>s are inside <tbody>s -->
+        <tr>
+            <td>Title_Bug</td>
+            <td>Id_Bug</td>
+            <td> NbrOfDate</td>
+            <td>EstimSize</td>
+            <td> RealSize</td>
+            <td>Note </td>
+            <td>the start </td>
+            <td>the end </td>
+        </tr>
+    </table>
+	
+  
+        <center> <label class="p" for="url">Put ID_Bug ! </label>
+        <input type="text" class=" input_id" value="Id" id="Id">
+        <button type="button" class="action-button shadow animate blue" onclick="HistoryBugzilla()">History From Bugzilla</button>
+        <button type="button" class="action-button shadow animate blue" onclick="gettimeline()">History with timeline</button>
+</center>
+	
+	 <div id="container" class="p"  ></div> </center><br> 
+	
+   <div id="timelineHolder" class="th"></div>
 
-
-    <center>
-        <center>
-            <label class="p" for="url"> Bug ID:</label>
-            <input type="text" class=" input_id" value="Id" id="Id">
-            <button type="button" class="action-button shadow animate blue" onclick="HistoryBugzilla()">History From Bugzilla</button>
-            <button type="button" class="action-button shadow animate blue" onclick="gettimeline()">History with timeline</button>
-
-
-
-        </center>
-
-
-
-
-        <table id="table" style="display: none;">
-            <!-- All <tr>s are inside <tbody>s -->
-            <tr style="width: 100%">
-		
-                <td>Title_Bug</td>
-                <td>Id_Bug</td>
-                <td> NbrOfDate</td>
-                <td>EstimSize</td>
-                <td> RealSize</td>
-                <td>Note </td>
-                <td>the start </td>
-                <td>the end </td>
-            </tr>
-        </table>
-        <div id="container" class="p"></div>
-    </center>
-    <br>
-
-    <div id="timelineHolder" class="th"></div>
-
-
+     
 </body>

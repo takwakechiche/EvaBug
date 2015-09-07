@@ -74,6 +74,8 @@ body {
 table {
     border-collapse: collapse;
 	 z-index: 200;
+	 width:100%;
+	 
 }
 #loading-img
 {
@@ -99,7 +101,7 @@ td, th {
 	
 }
         
-        p {    font-size: 23px;
+        p {font-size: 23px;
     padding-top: 100px;
     color: #0F1110;
     
