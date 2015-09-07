@@ -42,7 +42,7 @@
   //      (d.display == 'block') ? d.display = 'none': d.display = 'block';
 		
             $.get(urlStatus, function(response) {
-			 $("#table").remove();
+			
 			     $('#overlay').show();
                     $('#loading-img').show();
 	       $("#table").find("tr:gt(0)").remove();
@@ -53,7 +53,6 @@
                         success: function(data) {
 
                             handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
-						
 							 d.display = 'block';
                         },
 						  complete: function() {
@@ -317,7 +316,7 @@
 
 
 
-        $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 800px;height: 500px" > here you can find Details !</td></tr>');
+        $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 800px;height: 800px" > here you can find Details !</td></tr>');
 
         var table = drawtable(id, data, startDate);
 
