@@ -27,54 +27,78 @@
         packages: ["timeline"]
     });
 
-    function showme() {
-	
-        var urlStatus = $('#voto').val();
-        var d = document.getElementById("table").style;
-        $(document).ready(function() {
-
-            if (urlStatus == "") {
-                alert("Please put Url");
-            } else {
-            
-								var d = document.getElementById("table").style;
-						  $("#table").find("tr:gt(0)").remove();
-				  //      (d.display == 'block') ? d.display = 'none': d.display = 'block';
-					
-							$.get(urlStatus, function(response) {
-									   d.display = 'block';
-									   $('#overlay').show();
-										$('#loading-img').show();
-						
-								 $.each(response.bugs, function(index, elem) {
-
-									jQuery.ajax({
-										url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
-										success: function(data) {
-
-											handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
-											
-										},
-										  complete: function() {
-											
-													$('#loading-img').hide();
-													$('#overlay').hide();
-											   },
-										async: false
-																				 });
-
-																							});
+ 
 
 
-																						});
+  function showme() {
 
-																					}
-																				});
+       var urlStatus = $('#voto').val();
+       var d = document.getElementById("table").style;
+       $(document).ready(function() {
 
-																			}
+           if (urlStatus == "") {
+               alert("Please put Url");
+           } else {
+               if (urlStatus.indexOf("http://bugs.check24tech.de/buglist.cgi?") >= 0) {
+
+                   urlStatus = urlStatus.replace("http://bugs.check24tech.de/buglist.cgi?", "http://bugs.check24tech.de/rest/bug?");
+               }
 
 
 
+
+               var d = document.getElementById("table").style;
+               $("#table").find("tr:gt(0)").remove();
+               //      (d.display == 'block') ? d.display = 'none': d.display = 'block';
+
+               $.get(urlStatus, function(response) {
+                   d.display = 'block';
+                   $('#overlay').show();
+                   $('#loading-img').show();
+
+                   $.each(response.bugs, function(index, elem) {
+
+                       jQuery.ajax({
+                           url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
+                           success: function(data) {
+
+                               handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
+
+                           },
+                           complete: function() {
+
+                               $('#loading-img').hide();
+                               $('#overlay').hide();
+                           },
+                           async: false
+                       });
+
+                   });
+
+
+               });
+
+           }
+       });
+
+   }
+
+
+
+
+   /*         
+if (urlStatus.indexOf( "  http://bugs.check24tech.de/buglist.cgi? " ) >= 0) {
+
+urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "http://bugs.check24tech.de/rest/bug?");}
+
+
+
+				*/															
+																			
+																			
+																			
+																			
+																			
 
 
     function gettimeline() {
@@ -589,7 +613,9 @@
         <br>
 
 
-        <button type="button" id="hi" class="querybutton" onclick="javascript:document.getElementById('voto').value='http://bugs.check24tech.de/rest/bug?bug_status=TESTED&bug_status=ON%20PRODUCTION&bug_status=CLOSED&chfield=bug_status&chfieldfrom=-50d&chfieldto=Now&chfieldvalue=CLOSED&list_id=11344&query_format=advanced'"> Bugs CLOSED within the last 50 Days </button>
+        <button type="button" id="button" class="querybutton" onclick="javascript:document.getElementById('voto').value='http://bugs.check24tech.de/rest/bug?bug_status=TESTED&bug_status=ON%20PRODUCTION&bug_status=CLOSED&chfield=bug_status&chfieldfrom=-50d&chfieldto=Now&chfieldvalue=CLOSED&list_id=11344&query_format=advanced'"> Bugs CLOSED within the last 50 Days </button>
+
+          <button type="button" id="butt" class="querybutton2" onclick="javascript:document.getElementById('voto').value='http://bugs.check24tech.de/rest/bug?bug_status=TESTED&bug_status=ON%20PRODUCTION&bug_status=CLOSED&chfield=bug_status&chfieldfrom=-50d&chfieldto=Now&chfieldvalue=CLOSED&f1=cf_aufwand&list_id=12740&o1=notequals&query_format=advanced&v1=--- '">  Bugs with estimates, CLOSED within the last 50 days</button>
 
 
 
