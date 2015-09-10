@@ -34,6 +34,9 @@
 
        var urlStatus = $('#voto').val();
        var d = document.getElementById("table").style;
+	  var l = document.getElementById("idp").max;
+	  var p = document.getElementById("idp").value;
+	 
        $(document).ready(function() {
 
            if (urlStatus == "") {
@@ -54,21 +57,21 @@
                $.get(urlStatus, function(response) {
                    d.display = 'block';
                    $('#overlay').show();
-                   $('#loading-img').show();
-
                    $.each(response.bugs, function(index, elem) {
-
+                           document.getElementById("idp").max =   response.bugs.length ;
+						       document.getElementById("idp").value =   index ;
+						
                        jQuery.ajax({
                            url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
                            success: function(data) {
 
                                handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
-
-                           },
+                      
+                            },
                            complete: function() {
-
-                               $('#loading-img').hide();
-                               $('#overlay').hide();
+                                  if (index ==  response.bugs.length - 1 )
+                               {
+                               $('#overlay').hide();}
                            },
                            async: false
                        });
@@ -299,9 +302,9 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
                 if (RQ === "ok") {
 
                     $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a></td><td>" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td   bgcolor='#32CD32'>" + RQ + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
-                } else if (RQ === "Real time is  Bigger") {
+                } else if (RQ === "Real Size is  Bigger") {
                     $t.append("<tr style='cursor: pointer;'   onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td> <td>" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td  bgcolor='  	#FF4500'>" + RQ + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
-                } else if (RQ === "Real time is Smaller") {
+                } else if (RQ === "Real Size is Smaller") {
                     $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td><td >" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td onclick='D(" + id + ")' bgcolor='#FF7F50'> " + RQ + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
                 }
             }
@@ -339,7 +342,7 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
 
 
 
-        $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 900px;height: 500px" > here you can find Details !</td></tr>');
+        $t.append('<tr id="idofrow_' + id + '" > <td colspan="2" id="row_' + id + '" style=" width: 400px;height: 300px" > here you can find Details !</td></tr>');
 
         var table = drawtable(id, data, startDate);
 
@@ -457,24 +460,24 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
 
             return ("ok");
         } else if (sz1 === "XS" && ((sz2 === "S") || (sz2 === "M") || (sz2 === "L") || (sz2 === "XL") || (sz2 === "XXL"))) {
-            return ("Real time is  Bigger");
+            return ("Real Size is  Bigger");
         } else if (sz1 === "S" && ((sz2 === "M") || (sz2 === "L") || (sz2 === "XL") || (sz2 === "XXL")))
 
         {
-            return ("Real time is  Bigger");
+            return ("Real Size is  Bigger");
         } else if (sz1 === "M" && (sz2 === "L") || (sz2 === "XL") || (sz2 === "XXL"))
 
         {
-            return ("Real time is  Bigger");
+            return ("Real Size is  Bigger");
         } else if (sz1 === "L" && (sz2 === "XL") || (sz2 === "XXL"))
 
         {
-            return ("Real time is  Bigger");
+            return ("Real Size is  Bigger");
         } else if (sz1 === "xL" && (sz2 === "XXL"))
 
         {
-            return ("Real time is  Bigger");
-        } else return ("Real time is Smaller");
+            return ("Real Size is  Bigger");
+        } else return ("Real Size is Smaller");
 
     }
 
@@ -580,29 +583,20 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
         };
         timeline.draw(table, options);
 
-
-
-
-    }
+}
 </script>
 
-<body>
-    <div id="overlay">
-  
-    </div>
-    <img id="loading-img" src="loading.gif" style="display: none;">
+<body> 
+<center>
 
-    <center>
-
-        <p class="title">EvaBug</p>
+      <p class="title">EvaBug</p>
     </center>
+ 
+    <div id="overlay" style="display:none;">
 
-
-
-    <br>
-    <br>
-    <br>
-
+      <progress id="idp"  max="200" value = "100"  class = "bar"  ></progress>
+     </div>
+    
 
     <center>
         <label class="p" for="url">Query:</label>
@@ -617,12 +611,8 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
 
           <button type="button" id="butt" class="querybutton2" onclick="javascript:document.getElementById('voto').value='http://bugs.check24tech.de/rest/bug?bug_status=TESTED&bug_status=ON%20PRODUCTION&bug_status=CLOSED&chfield=bug_status&chfieldfrom=-50d&chfieldto=Now&chfieldvalue=CLOSED&f1=cf_aufwand&list_id=12740&o1=notequals&query_format=advanced&v1=--- '">  Bugs with estimates, CLOSED within the last 50 days</button>
 
-
-
-
-    
 	     <center> 
-	      <table border="1" id="table" style="display: none;">
+	      <table  id="table" style="display: none;">
         <!-- All <tr>s are inside <tbody>s -->
         <tr>
             <td>Title_Bug</td>
@@ -635,9 +625,7 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
             <td>the end </td>
         </tr>
     </table>
-	
-  
-        <center> <label class="p" for="url">ID_Bug </label>
+	    <center> <label class="p" for="url">ID_Bug </label>
         <input type="text" class=" input_id" value="Id" id="Id">
         <button type="button" class="action-button shadow animate blue" onclick="HistoryBugzilla()">History From Bugzilla</button>
         <button type="button" class="action-button shadow animate blue" onclick="gettimeline()">History with timeline</button>
