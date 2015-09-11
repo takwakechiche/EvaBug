@@ -67,7 +67,7 @@ cursor: pointer;
 body {
     font-family: Georgia, Times, serif;
     border-top: solid 50px #004180; 
-	border-bottom: solid 50px #004180;
+	border-bottom: solid 0px #004180;
 }
 
 .input_text{
