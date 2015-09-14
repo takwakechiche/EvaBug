@@ -342,7 +342,7 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
 
 
 
-        $t.append('<tr id="idofrow_' + id + '" > <td  id="row_' + id + '" style=" width: 700px;height: 300px" > here you can find Details !</td></tr>');
+            $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 800px;height: 400px" > here you can find Details !</td></tr>');
 
         var table = drawtable(id, data, startDate);
 
@@ -370,10 +370,13 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
     }
 
     function calbackfunc(id, table) {
-        var timelineHolder = document.getElementById("row_" + id);
+       var timelineHolder = document.getElementById("row_" + id);
         var timeline = new google.visualization.Timeline(timelineHolder);
 
+        
         timeline.draw(table);
+
+        
 
         google.visualization.events.addListener(timeline, 'ready', function() {
 
