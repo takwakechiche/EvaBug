@@ -12,6 +12,18 @@ text-decoration: none;
 margin-bottom: 169px;
 cursor: pointer;
 }
+.action-button2
+{
+	position: relative;
+	
+	border-radius: 10px;
+
+font-size: 25px;
+color: #FFF;
+text-decoration: none;
+margin-bottom: 30px;
+cursor: pointer;
+}
 
 .blue
 {

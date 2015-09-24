@@ -1,11 +1,13 @@
+
 <!DOCTYPE html>
 
 <html>
 
 <head>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+  
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
-
+     <script src="http://www.csvscript.com/dev/html5csv.js"></script>
 
     <title>Evaluation</title>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -26,97 +28,90 @@
      google.load('visualization', '1.0', {
         packages: ["timeline"]
     });
+	
 
- 
-
-
+ var nb =0;
+ var red=0;
+ var green= 0;
+ var orange=0;
   function showme() {
-
        var urlStatus = $('#voto').val();
        var d = document.getElementById("table").style;
 	  var l = document.getElementById("idp").max;
 	  var p = document.getElementById("idp").value;
 	 
        $(document).ready(function() {
-
            if (urlStatus == "") {
                alert("Please put Url");
            } else {
                if (urlStatus.indexOf("http://bugs.check24tech.de/buglist.cgi?") >= 0) {
-
                    urlStatus = urlStatus.replace("http://bugs.check24tech.de/buglist.cgi?", "http://bugs.check24tech.de/rest/bug?");
                }
-
-
-
-
                var d = document.getElementById("table").style;
                $("#table").find("tr:gt(0)").remove();
                //      (d.display == 'block') ? d.display = 'none': d.display = 'block';
-
                $.get(urlStatus, function(response) {
-                   d.display = 'block';
+               
                    $('#overlay').show();
                    $.each(response.bugs, function(index, elem) {
-                           document.getElementById("idp").max =   response.bugs.length ;
-						       document.getElementById("idp").value =   index ;
+                           
+				 d.display = 'block';  	
 						
-                       jQuery.ajax({
-                           url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
+                    jQuery.ajax({
+					
+					  url: "http://bugs.check24tech.de/rest/bug/" + elem.id + "/history",
                            success: function(data) {
-
-                               handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
-                      
+						   document.getElementById("idp").max =   response.bugs.length ;
+						     nb = response.bugs.length ;	
+						  document.getElementById("idp").value =   index ;
+                            handleData(data, elem.id, elem.cf_aufwand, elem.summary, elem.creation_time);
+                                
                             },
                            complete: function() {
                                   if (index ==  response.bugs.length - 1 )
-                               {
+                               { 
                                $('#overlay').hide();}
                            },
-                           async: false
-                       });
+					       }); 
+                        async: false
+                  
+           	
+				   });
+               
+					
+					   $('#table').each(function() {  
+					    var $table = $(this);
+						var $button = $("<button type='button'>");
+						$button.text("Export to CSV");
+						$button.insertAfter($table);
+                         //   $( ".F" ).css( "border", "3px solid red" );
+						$button.click(function() {  
+                        $('.F' ).remove();
+							// $('#table2').remove();
+							 CSV.begin('table').download('Export.csv').go();
+                  																
+	                        
+						});
+						 });  
+								   
+				 } );
+			 }
+             });
+	  
+ var s = document.getElementById("showdet").style;
+ s.display = 'block';    
 
-                   });
-
-
-               });
-
-           }
-       });
-
-   }
-
-
-
-
-   /*         
-if (urlStatus.indexOf( "  http://bugs.check24tech.de/buglist.cgi? " ) >= 0) {
-
-urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "http://bugs.check24tech.de/rest/bug?");}
-
-
-
-				*/															
+ }
+ 																		
 																			
-																			
-																			
-																			
-																			
-
-
     function gettimeline() {
-
         var id = $('#Id').val();
-
         if (id == "Id") {
-
-
             alert("Put ID");
         } else {
             jQuery.ajax({
                 url: "http://bugs.check24tech.de/rest/bug?id=" + id,
                 success: function(data) {
-
                     var startDate = data.bugs[0].creation_time;
                     var title = data.bugs[0].summary;
                     var $c = $("#container");
@@ -126,16 +121,10 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
                     jQuery.ajax({
                         url: "http://bugs.check24tech.de/rest/bug/" + id + "/history",
                         success: function(data) {
-
                             var link = "href='http://bugs.check24tech.de/show_bug.cgi?id=" + id + "'";
-
                             $c.html(" <a " + link + ">" + title + "</a> ");
-
                             var table = drawtable(id, data, startDate);
                             calbackfunc2(title, id, table);
-
-
-
                         },
                         async: false
                     });
@@ -143,22 +132,10 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
             });
         }
     }
-
-
-
-
     function HistoryBugzilla() {
-
-
-
         $(document).ready(function() {
-
-
             var id = $('#Id').val();
-
             if (id == "Id") {
-
-
                 alert("Put ID");
             } else {
                 var newPath = 'http://bugs.check24tech.de/show_activity.cgi?id=' + id
@@ -166,18 +143,14 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
             }
         });
     }
-
     function handleData(data, id, aufwand, title, startDate) {
-
         var start,
             lastInProgress = "",
             lastOnProduction = "",
             end,
             valStartprogress,
-
             valStartfronted,
             valStartitfronted,
-
             valEndclosed,
             valEndproduction,
             valEndtested,
@@ -187,6 +160,7 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
             excepend,
             $c = $("#container"),
             $t = $("#table"),
+			 
             addedOnProduction,
             addedInProgress,
             addedClosed,
@@ -201,42 +175,24 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
                 "andrey.tikhomirov": true,
                 "ibrahim.rekik": true,
                 "michael.bier": true
-
             };
         //var display = "";
         //display += "ID: "+id;
         //display += "cf_aufwand: "+aufwand;
-
-
         $.each(data.bugs[0].history, function(historyIndex, historyElem) {
-
-
-
-
             //var table = table from the function 
-
-
-
-
             $.each(historyElem.changes, function(changeIndex, changeElem) {
-
-
                 if (changeElem.added === "IN-PROGRESS") {
                     addedInProgress = historyElem.when;
                     valStartprogress = "IN-PROGRESS";
                 }
-
-
-
                 if (!valStartprogress && changeElem.removed === "it-frontend-kfz") {
                     removedItFrontendQueue = historyElem.when;
                     valStartitfronted = "it-frontend-kfz";
                 }
-
                 if (!valStartprogress && !valStartitfronted && frontendDevs[changeElem.added]) {
                     addedFrontendDev = historyElem.when;
                     valStartfronted = "frontendDevs"
-
                 }
                 if (!addedOnProduction && changeElem.added === "ON PRODUCTION") {
                     addedOnProduction = historyElem.when;
@@ -244,180 +200,127 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
                 } else if (!valEndproduction && changeElem.added === "CLOSED") {
                     addedClosed = historyElem.when;
                     valEndclosed = "CLOSED";
-
                 } else if (!valEndproduction && !valEndclosed && changeElem.added === "TESTED") {
                     addedTested = historyElem.when;
                     valEndtested = "TESTED";
                 } else if (!valEndproduction && !valEndclosed && !valEndtested && !valEndpmtest && changeElem.added === "READY-FOR-TEST") {
                     addedRft = historyElem.when;
                     valEndready = "READY-FOR-TEST";
-
                 }
-
-
-
-
             })
-
-
-
         });
-
         start = addedInProgress || removedItFrontendQueue || addedFrontendDev || false;
         // start = addedInProgress || removedItFrontendQueue || addedFrontendDev || false;
         end = addedTested || addedPmtestready || addedOnProduction || addedRft || addedClosed || false;
         valend = valEndproduction || valEndclosed || valEndtested || valEndready || false;
         valStart = valStartprogress || valStartitfronted || valStartfronted || false;
-
-
-
-
         var noend = "No End"
         var vide = "---";
-
         var nostart = "No start"
         var linkBugzilla = "href='http://bugs.check24tech.de/show_bug.cgi?id=" + id + "'";
-
-
-
         if ((start && end) && (start < end)) {
             NbOfDdate = calculateSpan(start, end);
             if (NbOfDdate < 0) {
                 NbOfDdate = calculateSpan(removedItFrontendQueue, end);
             }
             RealTaille = Comparaison(NbOfDdate);
-
-
-
             var RQ = InWhichCaseWeAre(aufwand, RealTaille);
             var chainevide = "---";
             if (aufwand === "---") {
-
                 $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a></td><td>" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td  >" + chainevide + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
-
-
-
-
             } else {
+			
                 if (RQ === "ok") {
-
+				red++;
                     $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a></td><td>" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td   bgcolor='#32CD32'>" + RQ + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
                 } else if (RQ === "Real Size is  Bigger") {
+				green++;
                     $t.append("<tr style='cursor: pointer;'   onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td> <td>" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td  bgcolor='  	#FF4500'>" + RQ + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
                 } else if (RQ === "Real Size is Smaller") {
+				 orange++;
                     $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td><td >" + id + "</td><td> " + NbOfDdate + "</td><td>" + aufwand + "</td><td> " + RealTaille + "</td><td onclick='D(" + id + ")' bgcolor='#FF7F50'> " + RQ + " </td><td>" + valStart + "</td><td>" + valend + "</td></tr>");
                 }
             }
-
-
-
-
             // add table to row
             // addTimeline(id, startDate, history)
-
-
-
         } else if (valStart != false && valend === false) {
-
-
-
             $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td><td >" + id + "</td><td> " + vide + "</td><td>" + aufwand + "</td><td> " + vide + "</td><td onclick='D(" + id + ")' > " + vide + " </td><td>" + valStart + "</td><td>" + noend + "</td></tr>");
         } else if (valend != false && valStart === false) {
-
-
-
-
             $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td><td >" + id + "</td><td> " + vide + "</td><td>" + aufwand + "</td><td> " + vide + "</td><td onclick='D(" + id + ")' > " + vide + " </td><td>" + nostart + "</td><td>" + valend + "</td></tr>");
         } else if (valStart === false && valend === false) {
-
-
             $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td><td >" + id + "</td><td> " + vide + "</td><td>" + aufwand + "</td><td> " + vide + "</td><td onclick='D(" + id + ")' > " + vide + " </td><td>" + nostart + "</td><td>" + noend + "</td></tr>");
         } else {
-
-
             $t.append("<tr style='cursor: pointer;' onclick='D(" + id + ")' > <td><a " + linkBugzilla + ">" + title + "</a> </td><td >" + id + "</td><td> " + vide + "</td><td>" + aufwand + "</td><td> " + vide + "</td><td onclick='D(" + id + ")'> " + vide + " </td><td>" + valStart + "</td><td>" + noend + "</td></tr>");
-
         }
-
-
-
-
-            $t.append('<tr id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 800px;height: 400px" > here you can find Details !</td></tr>');
-
-        var table = drawtable(id, data, startDate);
-
-
-        calbackfunc(id, table);
-
-
+            $t.append('<tr class="F" id="idofrow_' + id + '" > <td colspan="8" id="row_' + id + '" style=" width: 800px;height: 400px" > here you can find Details !</td></tr>');
+        
+	
+		var table = drawtable(id, data, startDate);
+      
+	  
+	  calbackfunc(id, table);
     }
-
+	
+	
+function hello(){
+   
+	var t = document.getElementById("table2").style; 
+	$n = $("#table2"); 
+	var percentOfGreen = (green/nb )* 100 
+    RealTimeIsOk = percentOfGreen.toFixed(2);
+	var percentOfOrange = (orange/nb)* 100 ;
+    RealTimeIsSmaller 	= percentOfOrange.toFixed(2);
+	var percentOfRed = (red/nb)* 100 ;
+	RealTimeIsBigger  = percentOfRed.toFixed(2);
+	var hh = green + orange + red;
+	var fTime =  ((nb - hh) /100 )* 100 ;
+    var undefTime= fTime.toFixed(2);	;
+	t.display = 'block'; 
+	if (nb != 0)
+		{$n.append("<tr> <td>" + nb + "</td><td >" +  RealTimeIsOk + " % </td><td> " +  RealTimeIsSmaller+ " % </td><td>" 	+ RealTimeIsBigger +  " %</td><td>" 	+ undefTime +  "%</td </tr>");
+		}  
+		else {t.display = 'none'; 
+		}
+}
+	
     function D(id) {
         if (1 === 1) {
             va_et_vient("row_" + id);
         }
     }
-
-
     function va_et_vient(div) {
         var d = document.getElementById(div).style;
         (d.display == 'block') ? d.display = 'none': d.display = 'block';
     }
-
     function va(div) {
         var d = document.getElementById(div).style;
         d.display = 'none';
     }
-
     function calbackfunc(id, table) {
        var timelineHolder = document.getElementById("row_" + id);
         var timeline = new google.visualization.Timeline(timelineHolder);
-
         
         timeline.draw(table);
-
         
-
         google.visualization.events.addListener(timeline, 'ready', function() {
-
-
             //$(timelineHolder).css("display", "none");
-
         });
-
-
         $(timelineHolder).css("display", "none");
-
-
-
-
     }
     Date.prototype.addDays = function(days) {
         var date = new Date(this.valueOf())
         date.setDate(date.getDate() + days);
         return date;
     }
-
-
     function calculateSpan(start, end) {
         var Dstart = new Date(start);
         var Dend = new Date(end);
-
-
-
-
         NbOfDdate = Math.round(((((Dend - Dstart) / 1000) / 60) / 60) / 12);
         NbOfDdate = NbOfDdate / 2;
-
         var numOfWeekends = getNumOfWeekends(Dstart, Dend);
         NbOfDdate = NbOfDdate - (numOfWeekends * 2);
-
         return NbOfDdate === 0 ? 0.5 : NbOfDdate;
     }
-
-
-
-
     function getNumOfWeekends(startDate, endDate) {
         var count = 0;
         var curDate = startDate;
@@ -430,13 +333,9 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
         }
         return count / 2;
     }
-
-
-
     function Comparaison(nb) {
         if (nb >= 0.5 && nb <= 1.5) {
             return ("XS");
-
         } else if (nb >= 1.5 && nb <= 3) {
             return ("S");
         } else if (nb > 3 && nb <= 6) {
@@ -445,80 +344,45 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
             return ("L");
         } else if (nb > 12 && nb <= 18) {
             return ("XL");
-
         } else if (nb > 18) {
             return ("XXL");
-
         } else return (nb);
-
     }
-
-
     function InWhichCaseWeAre(sz1, sz2, RQ) {
-
-
-
-
         if (sz1 === sz2) {
-
             return ("ok");
         } else if (sz1 === "XS" && ((sz2 === "S") || (sz2 === "M") || (sz2 === "L") || (sz2 === "XL") || (sz2 === "XXL"))) {
             return ("Real Size is  Bigger");
         } else if (sz1 === "S" && ((sz2 === "M") || (sz2 === "L") || (sz2 === "XL") || (sz2 === "XXL")))
-
         {
             return ("Real Size is  Bigger");
         } else if (sz1 === "M" && (sz2 === "L") || (sz2 === "XL") || (sz2 === "XXL"))
-
         {
             return ("Real Size is  Bigger");
         } else if (sz1 === "L" && (sz2 === "XL") || (sz2 === "XXL"))
-
         {
             return ("Real Size is  Bigger");
         } else if (sz1 === "xL" && (sz2 === "XXL"))
-
         {
             return ("Real Size is  Bigger");
         } else return ("Real Size is Smaller");
-
     }
-
-
-
-
     function drawtable(id, data, startDate) {
-
-
         var rowLabel = "";
-
-
-
         label = "created";
-
-
         var dataTable = new google.visualization.DataTable();
         dataTable.addColumn('string', 'index');
         dataTable.addColumn('string', 'event');
         dataTable.addColumn('date', 'Start Date');
         dataTable.addColumn('date', 'End Date');
-
         var finale = data.bugs[0].history[0].when;
-
-
         var relevantRows = [];
         dataTable.addRow([0 + "", label, new Date(startDate), new Date(finale)]);
-
         $.each(data.bugs[0].history, function(historyIndex, historyElem) {
-
             rowLabel = getUsefullString(historyElem);
-
-
             if (rowLabel) {
-
                 //startDate = historyElem.when;
                 //dataTable.addRow([historyIndex+1 + "", rowLabel, new Date(startDate), new Date(finale)]);
-
                 relevantRows.push({
                     index: historyIndex + 1,
                     rowLabel: rowLabel,
@@ -526,66 +390,41 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
                 });
             }
         });
-
         //var endDate;
         startDate = data.bugs[0].history[0].when
         $.each(relevantRows, function(index, row) {
-
             dataTable.addRow([row.index + "", row.rowLabel, new Date(startDate), new Date(row.whenDate)]);
             startDate = row.whenDate;
-
         });
-
         return dataTable;
-
-
     }
-
     function getUsefullString(historyElem) {
         var ret = "";
         var displayChange = false;
         var displayString = "";
         var displayStringadd = "";
-
         var displayStringfield = "";
-
         $.each(historyElem.changes, function(indexChanges, changesElem) {
-
             $.each(changesElem, function(key, value) {
                 if (key === "added") {
-
                     displayStringadd += value + " ";
-
-
                 } else if (key === "field_name" && (value === "status" || value === "assigned_to")) {
                     displayStringfield += "  " + value + " ";
                     displayChange = true;
-
                 }
-
-
             });
         });
         displayString += displayStringfield + " : " + displayStringadd
-
         return displayChange ? displayString : false;
     }
-
-
     function calbackfunc2(titleBug, id, table) {
-
-
         var timelineHolder = document.getElementById("timelineHolder");
         var timeline = new google.visualization.Timeline(timelineHolder);
-
         var options = {
-
             width: 1800,
             height: 2000,
-
         };
         timeline.draw(table, options);
-
 }
 </script>
 
@@ -613,8 +452,9 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
         <button type="button" id="button" class="querybutton" onclick="javascript:document.getElementById('voto').value='http://bugs.check24tech.de/rest/bug?bug_status=TESTED&bug_status=ON%20PRODUCTION&bug_status=CLOSED&chfield=bug_status&chfieldfrom=-50d&chfieldto=Now&chfieldvalue=CLOSED&list_id=11344&query_format=advanced'"> Bugs CLOSED within the last 50 Days </button>
 
           <button type="button" id="butt" class="querybutton2" onclick="javascript:document.getElementById('voto').value='http://bugs.check24tech.de/rest/bug?bug_status=TESTED&bug_status=ON%20PRODUCTION&bug_status=CLOSED&chfield=bug_status&chfieldfrom=-50d&chfieldto=Now&chfieldvalue=CLOSED&f1=cf_aufwand&list_id=12740&o1=notequals&query_format=advanced&v1=--- '">  Bugs with estimates, CLOSED within the last 50 days</button>
-
-	     <center> 
+  
+	 
+	    
 	      <table  id="table" style="display: none;">
         <!-- All <tr>s are inside <tbody>s -->
         <tr>
@@ -628,10 +468,22 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
             <td>the end </td>
         </tr>
     </table>
+	<br>
+	<button type="button" id="showdet" style="display: none;"class="action-button2 shadow animate blue" onclick="hello()">Show Detail</button>
+	     <table  id="table2" style=" display: none;">
+            <tr>
+            <td> Total</td>
+            <td>RealTimeIsOk</td>
+            <td>RealTimeIsSmaller </td>
+            <td>RealTimeIsBigger </td>
+			<td>Not Possible To Calculate RealTime </td>
+        </tr>
+        </table>
 	    <center> <label class="p" for="url">ID_Bug </label>
         <input type="text" class=" input_id" value="Id" id="Id">
         <button type="button" class="action-button shadow animate blue" onclick="HistoryBugzilla()">History From Bugzilla</button>
         <button type="button" class="action-button shadow animate blue" onclick="gettimeline()">History with timeline</button>
+		
 </center>
 	
 	 <div id="container" class="p"  ></div> </center><br> 
@@ -640,3 +492,4 @@ urlStatus = urlStatus.replace("  http://bugs.check24tech.de/buglist.cgi? ", "htt
 
      
 </body>
+
